@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { hashModulo, hashCuadrado, hashTruncamiento, hashPlegamiento, calcularRango } from '../funcionesHash/HashModulo'
-export default function ColisionLineal(props) {
+
+export default function ColisionListaEnlazada(props) {
 
     let rango;
     let funcionHash;
@@ -29,7 +30,7 @@ export default function ColisionLineal(props) {
         if (props.claves.length < props.numClaves) {
             let nuevo = props.claves;
             for (let i = 0; i < props.numClaves; i++) {
-                nuevo.push("")
+                nuevo.push([])
             }
             const final = nuevo;
             props.setClaves(final)
@@ -40,13 +41,10 @@ export default function ColisionLineal(props) {
         let clave = document.getElementById("inputClave").value
         if (validarClave(clave)) {
             let index = funcionHash(clave, rango, props.numClaves)
-            if (props.claves[index] == "") {
+            if (props.claves[index][0] == undefined) {
                 insertar(clave, index)
             } else {
                 alert("Colision!!!\nEn la posciion: " + (index + 1))
-                while (props.claves[index] != "") {
-                    index = (index + 1 >= props.numClaves) ? 0 : ++index;
-                }
                 insertar(clave, index)
             }
         }
@@ -54,7 +52,12 @@ export default function ColisionLineal(props) {
 
     function insertar(clave, index) {
         let nuevo = props.claves
-        nuevo[index] = parseInt(clave);
+        for (let i = 0; i < props.numClaves; i++) {
+            if (nuevo[index][i] == undefined) {
+                nuevo[index][i] = parseInt(clave)
+                break;
+            }
+        }
         const actualizado = nuevo
         props.setClaves(actualizado)
         props.setNumInsertadas(props.numInsertadas + 1)
@@ -69,24 +72,29 @@ export default function ColisionLineal(props) {
 
     function deleteOrdenInsercion(clave) {
         const nuevo = props.ordenInsercion
-        nuevo.splice(nuevo.indexOf(parseInt(clave)), 1)
+        nuevo.splice(nuevo.indexOf(parseInt(clave)),1)
         props.setOrdenInsercion(nuevo)
     }
 
     function eliminarClave() {
         let clave = parseInt(document.getElementById("inputClave").value)
-        let index = props.claves.indexOf(clave)
-        console.log(index)
         let nuevo = props.claves
-        if (index != -1 && nuevo[index] != "") {
-            nuevo[index] = "";
-            const actualizado = nuevo
-            props.setClaves(actualizado)
-            props.setNumInsertadas(props.numInsertadas - 1)
-            deleteOrdenInsercion(clave)
-        } else {
-            alert("Clave no insertada")
+
+        for (let i = 0; i < props.numClaves; i++) {
+            for (let j = 0; j < props.numClaves; j++) {
+                if (nuevo[i][j] == clave) {
+                    nuevo[i].splice(j,1)
+                    const actualizado = nuevo
+                    props.setClaves(actualizado)
+                    props.setNumInsertadas(props.numInsertadas - 1)
+                    deleteOrdenInsercion(clave)
+                    return;
+                }
+            }
         }
+
+        alert("Clave no insertada")
+
     }
 
     function validarClave(clave) {
@@ -96,7 +104,7 @@ export default function ColisionLineal(props) {
         } else if (+clave < 1) {
             alert("Ingrese un numero entero positivo")
             return false;
-        } else if (props.claves.indexOf(+clave) != -1) {
+        } else if (props.ordenInsercion.indexOf(+clave) != -1) {
             alert("Numero ya ingresado")
             return false;
         } else if (props.numInsertadas >= props.numClaves) {
@@ -108,7 +116,7 @@ export default function ColisionLineal(props) {
 
     return (
         <>
-            <h1>{modo} - Colision: lineal</h1>
+            <h1>{modo} - Colision: Listas enlazadas</h1>
             <div>
                 <h3>Clave:</h3>
                 <input type="number" name="" id="inputClave" /> <br />
@@ -120,4 +128,5 @@ export default function ColisionLineal(props) {
             </ol>
         </>
     )
+
 }

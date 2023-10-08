@@ -7,13 +7,27 @@ export default function Binaria(props) {
             const arregloOrdenado = [...props.claves].sort((a, b) => a - b);
 
             props.setClaves(arregloOrdenado);
+            addOrdenInsercion(clave)
         }
+    }
+
+    function addOrdenInsercion(clave){
+        const nuevo = props.ordenInsercion
+        nuevo.push(parseInt(clave))
+        props.setOrdenInsercion(nuevo)
+    }
+
+    function deleteOrdenInsercion(clave) {
+        const nuevo = props.ordenInsercion
+        nuevo.splice(nuevo.indexOf(parseInt(clave)), 1)
+        props.setOrdenInsercion(nuevo)
     }
 
     function eliminarClave() {
         let clave = parseInt(document.getElementById("inputClave").value)
         let index = props.claves.indexOf(clave)
         props.setClaves(prevNumbers => prevNumbers.filter((_, i) => i !== index));
+        deleteOrdenInsercion(clave)
     }
 
     function validarClave(clave) {

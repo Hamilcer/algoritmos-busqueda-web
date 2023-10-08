@@ -77,7 +77,21 @@ export default function ColisionDobleHash(props) {
         const actualizado = nuevo
         props.setClaves(actualizado)
         props.setNumInsertadas(props.numInsertadas + 1)
+        addOrdenInsercion(clave)
     }
+
+    function addOrdenInsercion(clave){
+        const nuevo = props.ordenInsercion
+        nuevo.push(parseInt(clave))
+        props.setOrdenInsercion(nuevo)
+    }
+
+    function deleteOrdenInsercion(clave) {
+        const nuevo = props.ordenInsercion
+        nuevo.splice(nuevo.indexOf(parseInt(clave)),1)
+        props.setOrdenInsercion(nuevo)
+    }
+
     function eliminarClave() {
         let clave = parseInt(document.getElementById("inputClave").value)
         let index = props.claves.indexOf(clave)
@@ -88,6 +102,7 @@ export default function ColisionDobleHash(props) {
             const actualizado = nuevo
             props.setClaves(actualizado)
             props.setNumInsertadas(props.numInsertadas - 1)
+            deleteOrdenInsercion(clave)
         } else {
             alert("Clave no insertada")
         }
