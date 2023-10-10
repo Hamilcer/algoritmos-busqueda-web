@@ -1,0 +1,11 @@
+.ag-theme-alpine-dark {
+    height: 50vh;
+    width: 90vw;
+    
+}
+
+.externa {
+    position: absolute;
+    left: 0;
+    padding-left: 2%;
+}
