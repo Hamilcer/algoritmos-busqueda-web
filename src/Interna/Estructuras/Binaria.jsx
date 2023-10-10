@@ -1,12 +1,14 @@
-export default function Secuencial(props) {
+export default function Binaria(props) {
 
     function agregarClave() {
         let clave = document.getElementById("inputClave").value
         if (validarClave(clave)) {
-            props.setClaves(prevNumbers => [...prevNumbers, parseInt(clave)]);
+            props.setClaves(props.claves.push(parseInt(clave)));
+            const arregloOrdenado = [...props.claves].sort((a, b) => a - b);
+
+            props.setClaves(arregloOrdenado);
             addOrdenInsercion(clave)
         }
-
     }
 
     function addOrdenInsercion(clave) {
@@ -24,13 +26,17 @@ export default function Secuencial(props) {
     function eliminarClave() {
         let clave = parseInt(document.getElementById("inputClave").value)
         let index = props.claves.indexOf(clave)
-        props.setClaves(prevNumbers => prevNumbers.filter((_, i) => i !== index));
-        deleteOrdenInsercion(clave);
+        if (index != -1) {
+            props.setClaves(prevNumbers => prevNumbers.filter((_, i) => i !== index));
+            deleteOrdenInsercion(clave)
+        } else {
+            alert("Clave no insertada!!")
+        }
     }
 
     function validarClave(clave) {
         if (clave.length > props.numCifras) {
-            alert("Introduzca una clave con " + numCifras + "cifras")
+            alert("Introduzca una clave con " + props.numCifras + "cifras")
             return false;
         } else if (+clave < 1) {
             alert("Ingrese un numero entero positivo")
@@ -47,7 +53,7 @@ export default function Secuencial(props) {
 
     return (
         <>
-            <h1>Busqueda secuencial</h1>
+            <h1>Busqueda binaria</h1>
             <div>
                 <h3>Clave:</h3>
                 <input type="number" name="" id="inputClave" /> <br />

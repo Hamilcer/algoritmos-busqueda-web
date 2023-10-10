@@ -38,11 +38,6 @@ export default function MenuInterna({ tipoBusqueda, colision, numClaves, numCifr
         console.log(ordenInsercion)
     }
 
-
-
-
-
-
     return (
         <>
 

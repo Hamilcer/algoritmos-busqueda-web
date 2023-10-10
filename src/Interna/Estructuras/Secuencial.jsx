@@ -1,17 +1,15 @@
-export default function Binaria(props) {
+export default function Secuencial(props) {
 
     function agregarClave() {
         let clave = document.getElementById("inputClave").value
         if (validarClave(clave)) {
-            props.setClaves(props.claves.push(parseInt(clave)));
-            const arregloOrdenado = [...props.claves].sort((a, b) => a - b);
-
-            props.setClaves(arregloOrdenado);
+            props.setClaves(prevNumbers => [...prevNumbers, parseInt(clave)]);
             addOrdenInsercion(clave)
         }
+
     }
 
-    function addOrdenInsercion(clave){
+    function addOrdenInsercion(clave) {
         const nuevo = props.ordenInsercion
         nuevo.push(parseInt(clave))
         props.setOrdenInsercion(nuevo)
@@ -26,8 +24,12 @@ export default function Binaria(props) {
     function eliminarClave() {
         let clave = parseInt(document.getElementById("inputClave").value)
         let index = props.claves.indexOf(clave)
-        props.setClaves(prevNumbers => prevNumbers.filter((_, i) => i !== index));
-        deleteOrdenInsercion(clave)
+        if (index != -1) {
+            props.setClaves(prevNumbers => prevNumbers.filter((_, i) => i !== index));
+            deleteOrdenInsercion(clave);
+        } else {
+            alert("Clave no insertada!!")
+        }
     }
 
     function validarClave(clave) {
@@ -49,7 +51,7 @@ export default function Binaria(props) {
 
     return (
         <>
-            <h1>Busqueda binaria</h1>
+            <h1>Busqueda secuencial</h1>
             <div>
                 <h3>Clave:</h3>
                 <input type="number" name="" id="inputClave" /> <br />

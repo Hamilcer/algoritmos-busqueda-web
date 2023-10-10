@@ -35,7 +35,7 @@ export default function Interna() {
             <h4>Ingresa el número de cifras que va a tener cada clave: </h4>
             <input type="number" onChange={cambioNumCifras} /> <br />
 
-            <button className="btn btn-default" type="submit"> Seleccionar </button>
+            <button className="btn btn-default" type="submit"> Aceptar </button>
         </form>;
     }
 
