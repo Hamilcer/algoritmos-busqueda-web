@@ -1,78 +1,151 @@
 import React, {
     useCallback,
-    useMemo,
+    useEffect,
     useRef,
     useState,
-    StrictMode,
 } from 'react';
-import { createRoot } from 'react-dom/client';
 import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import Cookies from 'universal-cookie';
 
-
-// specify the data
-const rowDataA = [
-    { make: 'Toyota', model: 'Celica', price: 35000 },
-    { make: 'Porsche', model: 'Boxster', price: 72000 },
-    { make: 'Aston Martin', model: 'DBX', price: 190000 },
-];
-
-const rowDataB = [
-    { make: 'Toyota', model: 'Celica', price: 35000 },
-    { make: 'Ford', model: 'Mondeo', price: 32000 },
-    { make: 'Porsche', model: 'Boxster', price: 72000 },
-    { make: 'BMW', model: 'M50', price: 60000 },
-    { make: 'Aston Martin', model: 'DBX', price: 190000 },
-];
 const cookies = new Cookies();
+
+const columnData2 = [
+    { field: "make" },
+    { field: "model" },
+    { field: "price" },
+    { field: "nueva" }
+  ];
+
 export default function ExpansionParcial() {
 
+    const gridRef = useRef();
+    const data = cookies.get('data')
+    //console.log(data);
 
-    console.log(cookies.get('data'))
+    let numFilas = data.numFilas
+    let numColumnas = data.numColumnas
+    const rowData = [];
+    const columnDefs = [];
+    const insertadas = []
+    const expasiones = [data.numColumnas]
 
-    const containerStyle = useMemo(() => ({ width: '100%', height: '100%' }), []);
-    const gridStyle = useMemo(() => ({ height: '100%', width: '100%' }), []);
-    const [rowData, setRowData] = useState(rowDataA);
-    const [columnDefs, setColumnDefs] = useState([
-        { field: 'make' },
-        { field: 'model' },
-        { field: 'price' },
-    ]);
+    useEffect(() => {
+        crearFilas(numFilas, numColumnas)
+        crearColumnas(numColumnas)
+    }, [1])
 
-    const onRowDataA = useCallback(() => {
-        setRowData(rowDataA);
-    }, [rowDataA]);
+    function leerClave() {
+        let clave = parseInt(document.getElementById("add").value)
+        if ((insertadas.length + 1) / (rowData.length * columnDefs.length) >= data.doExpansion) {
+            alert("expansion")
+            expandir()
+        }
+        insertar(clave)
+        insertadas.push(clave)
+    }
 
-    const onRowDataB = useCallback(() => {
-        setRowData(rowDataB);
-    }, [rowDataB]);
+    function insertar(clave) {
+        let index = clave % columnDefs.length
+        for (let i = 0; i < rowData.length; i++) {
+            if (rowData[i][index] == '-') {
+                rowData[i][index] = clave.toString()
+                break;
+            }
+        }
+        actualizarCells()
+    }
+
+    function expandir() {
+        console.log("expasiones"+expasiones);
+        if (expasiones.length < 2) {
+            numColumnas = expasiones[0] + parseInt(expasiones[0] / 2)
+        } else {
+            numColumnas = expasiones[expasiones.length - 2] * 2
+        }
+        expasiones.push(numColumnas)
+        crearFilas(numFilas, numColumnas)
+        crearColumnas(numColumnas)
+
+        console.log(rowData)
+        console.log(columnDefs)
+        console.log(insertadas);
+
+        for (let i = 0; i < insertadas.length; i++) {
+            insertar(insertadas[i])
+        }
+        actualizarColums()
+
+    }
+
+    const actualizarCells = useCallback(() => {
+        gridRef.current.api.refreshCells();
+        //gridRef.current.api.redrawRows();
+        //gridRef.current.api.setRowData(rowData);
+        //gridRef.current.api.setColumnDefs(columnDefs);
+        //console.log(gridRef.current.api);
+    }, []);
+
+    const actualizarColums = useCallback(() => {
+        //gridRef.current.api.refreshCells();
+        //gridRef.current.api.redrawRows();
+        gridRef.current.api.setRowData(rowData);
+        gridRef.current.api.setColumnDefs(columnDefs);
+        //console.log(gridRef.current.api);
+    }, []);
+
+    const actualizarGrid = useCallback(() => {
+        gridRef.current.api.refreshCells();
+        //gridRef.current.api.redrawRows();
+        gridRef.current.api.setRowData(rowData);
+        gridRef.current.api.setColumnDefs(columnDefs);
+        //console.log(gridRef.current.api);
+    }, []);
+
+    function crearFilas(filas, columnas) {
+        for (let i = 0; i < filas; i++) {
+            rowData[i] = {}
+            for (let j = 0; j < columnas; j++) {
+                rowData[i][j] = '-'
+            }
+        }
+    }
+
+    function crearColumnas(columnas) {
+        for (let i = 0; i < columnas; i++) {
+            columnDefs[i] = { "field": i.toString() };
+        }
+    }
+
+
+    const onColumnData = useCallback(() => {
+        //setColumnDefs(columnData2);
+      }, []);
 
     return (
-        <div
-            style={{
-                height: '100%',
-                width: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-            }}
-        >
+        <>
+            <h1>Parcial</h1>
+            <input type="number" id='add' />
             <div style={{ marginBottom: '5px', minHeight: '30px' }}>
-                <button onClick={onRowDataA}>Row Data A</button>
-                <button onClick={onRowDataB}>Row Data B</button>
+                <button onClick={leerClave}>Insertar</button>
+                <button onClick={onColumnData}>Orto</button>
             </div>
-            <div style={{ flex: '1 1 0px' }}>
-                <div style={{ height: 1000 }} className="ag-theme-alpine">
-                    <AgGridReact
-                        rowData={rowData}
-                        columnDefs={columnDefs}
-                        rowSelection={'single'}
-                        animateRows={true}
-                    />
-                </div>
+            <div style={{ height: 500 }} className="ag-theme-alpine-dark">
+                <AgGridReact
+
+                    ref={gridRef}
+
+                    rowData={rowData}
+                    columnDefs={columnDefs}
+                    rowSelection={'single'}
+                    animateRows={true}
+
+                    //onGridReady={actualizarGrid}
+
+                />
             </div>
-        </div>
+        </>
     );
 };
 

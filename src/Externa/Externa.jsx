@@ -10,7 +10,7 @@ export default function Externa() {
     const [tipoExpansion, setTipoExpansion] = useState(0)
     const [numCifras, setNumCifras] = useState(4)
     const [numFilas, setNumFilas] = useState(2)
-    const [numColumnas, setNumColumnas] = useState(4)
+    const [numColumnas, setNumColumnas] = useState(2)
     const [doExpansion, setDoExpansion] = useState(.75)
     const [doReduccion, setDoReduccion] = useState(1.2)
     const [parametrosValidos, setParametrosValidos] = useState(false)
@@ -89,7 +89,7 @@ export default function Externa() {
         } else if (numCifras < 1) {
             alert("Ingerse un numero de cifras válido")
             return;
-        } else if (doExpansion >= 1 || doExpansion <= .5) {
+        } else if (doExpansion >= 1 || doExpansion <= .49) {
             alert("Ingrese un porcentaje de expansion valido")
             return;
         } else if (doReduccion <= 1 || doReduccion >= 2) {
@@ -97,8 +97,8 @@ export default function Externa() {
             return;
         }
         handleSeleccionar();
-        const data = {"numCifras":numCifras}
-        cookies.set("data", data,{ path: "/ ; " })
+        const data = { "numCifras": numCifras, "numFilas": numFilas, "numColumnas":numColumnas, "doExpansion":doExpansion, "doReduccion":doReduccion}
+        cookies.set("data", data, { path: "/ ; " })
     }
 
     //cookies.set("nombre", "hamilton", { path: "/ ; " })

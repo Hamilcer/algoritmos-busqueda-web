@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import { RouterProvider, createHashRouter } from 'react-router-dom'
 
-import Interna from './Interna.jsx'
-import Externa from './Externa.jsx'
+import Interna from './Interna/Interna.jsx'
+import Externa from './Externa/Externa.jsx'
+import MenuExterna from './Externa/Estructura/ExpansionTotal.jsx'
 
 const router = createHashRouter([
   {
@@ -18,8 +19,12 @@ const router = createHashRouter([
   {
     path: "/externa",
     element: <Externa />,
+  },
+  {
+    path: "/estructura-externa",
+    element: <MenuExterna />,
   }
-])
+  ])
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
