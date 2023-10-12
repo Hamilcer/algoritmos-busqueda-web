@@ -13,7 +13,7 @@ export default function Externa() {
     const [numColumnas, setNumColumnas] = useState(2)
     const [doExpansion, setDoExpansion] = useState(.75)
     const [doReduccion, setDoReduccion] = useState(1.2)
-    const [parametrosValidos, setParametrosValidos] = useState(true)
+    const [parametrosValidos, setParametrosValidos] = useState(false)
 
     let contenido;
 
@@ -100,13 +100,6 @@ export default function Externa() {
         const data = { "numCifras": numCifras, "numFilas": numFilas, "numColumnas":numColumnas, "doExpansion":doExpansion, "doReduccion":doReduccion}
         cookies.set("data", data, { path: "/ ; " })
     }
-
-    //cookies.set("nombre", "hamilton", { path: "/ ; " })
-    //cookies.set("nombre2", "ElCristian", { path: "/ ; " })
-
-
-    //cookies.get('nombre') 
-
 
     return (
         <>

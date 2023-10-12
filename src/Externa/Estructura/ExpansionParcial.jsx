@@ -30,6 +30,9 @@ export default function ExpansionParcial() {
     const insertadas = []
     const expasiones = [data.numColumnas]
 
+    const doE = data.doExpansion
+    const doR = data.doReduccion
+
     useEffect(() => {
         crearFilas(numFilas, numColumnas)
         crearColumnas(numColumnas)
@@ -37,7 +40,7 @@ export default function ExpansionParcial() {
 
     function leerClave() {
         let clave = parseInt(document.getElementById("add").value)
-        if ((insertadas.length + 1) / (numFilas * columnDefs.length) >= data.doExpansion) {
+        if ((insertadas.length + 1) / (numFilas * columnDefs.length) >= doE) {
             alert("expansion")
             expandir()
         }
@@ -45,17 +48,37 @@ export default function ExpansionParcial() {
         insertadas.push(clave)
     }
 
+    function eliminarClave() {
+        let clave = parseInt(document.getElementById("add").value)
+        if (!insertadas.includes(clave)) {
+            alert("La clave no está insertada")
+            return;
+        }
+
+        let index = clave % columnDefs.length
+        for (let i = 0; i < rowData.length; i++) {
+            if (rowData[i][index] == clave.toString()) {
+                rowData[i][index] = (i < numFilas) ? '-' : ''
+                insertadas.splice(insertadas.indexOf(clave), 1)
+                break;
+            }
+        }
+
+        if ((insertadas.length) / (columnDefs.length) <= doR && expasiones.length > 1) {
+            alert("Reduccion")
+            reducir()
+        }
+        actualizarCells()
+    }
+
     function insertar(clave) {
         let index = clave % columnDefs.length
         let i = 0;
-        console.log("------------------------------------------");
         while (true) {
-            console.log(rowData);
             if (i < rowData.length && rowData[i][index] == '-') {
                 rowData[i][index] = clave.toString()
                 break;
             } else if (i >= numFilas && !rowData[i]) {
-                console.log(!rowData[i]);
                 if (!rowData[i]) {
                     rowData[i] = {}
                 }
@@ -88,6 +111,17 @@ export default function ExpansionParcial() {
 
     }
 
+    function reducir() {
+        numColumnas = expasiones[expasiones.length - 2]
+        expasiones.pop()
+        crearFilas(numFilas, numColumnas)
+        crearColumnas(numColumnas)
+        for (let i = 0; i < insertadas.length; i++) {
+            insertar(insertadas[i])
+        }
+        actualizarColums()
+    }
+
     const actualizarCells = useCallback(() => {
         gridRef.current.api.refreshCells();
         //gridRef.current.api.redrawRows();
@@ -116,15 +150,20 @@ export default function ExpansionParcial() {
                 rowData[i][j] = '-'
             }
         }
-        let j = numFilas
-        for(let j = numFilas; j<rowData.length;j++){
+        let actualRows = rowData.length
+        for (let j = numFilas; j < actualRows; j++) {
             rowData.pop()
         }
+
     }
 
     function crearColumnas(columnas) {
         for (let i = 0; i < columnas; i++) {
             columnDefs[i] = { "field": i.toString() };
+        }
+        let sobrante = columnDefs.length
+        for (let j = columnas; j < sobrante; j++) {
+            columnDefs.pop()
         }
     }
 
@@ -140,6 +179,7 @@ export default function ExpansionParcial() {
             <input type="number" id='add' />
             <div style={{ marginBottom: '5px', minHeight: '30px' }}>
                 <button onClick={leerClave}>Insertar</button>
+                <button onClick={eliminarClave}>Eliminar</button>
             </div>
             <div style={{ height: 500 }} className="ag-theme-alpine-dark">
                 <AgGridReact
