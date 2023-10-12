@@ -13,7 +13,7 @@ export default function Externa() {
     const [numColumnas, setNumColumnas] = useState(2)
     const [doExpansion, setDoExpansion] = useState(.75)
     const [doReduccion, setDoReduccion] = useState(1.2)
-    const [parametrosValidos, setParametrosValidos] = useState(false)
+    const [parametrosValidos, setParametrosValidos] = useState(true)
 
     let contenido;
 
