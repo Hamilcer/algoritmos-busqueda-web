@@ -130,7 +130,7 @@ export default function ColisionArregloAnidado(props) {
                 <button onClick={eliminarClave}>Eliminar</button>
             </div>
             <ol>
-                {props.claves.map((num, index) => <li key={index}>{num}</li>)}
+                {props.claves.map((num, index) => <li key={index}>{"" + num}</li>)}
             </ol>
         </>
     )

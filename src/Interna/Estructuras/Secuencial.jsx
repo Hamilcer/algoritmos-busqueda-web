@@ -1,3 +1,5 @@
+import toast, { Toaster } from 'react-hot-toast';
+
 export default function Secuencial(props) {
 
     function agregarClave() {
@@ -49,6 +51,10 @@ export default function Secuencial(props) {
         return true;
     }
 
+    function notificar(msg) {
+        toast(msg)
+    }
+
     return (
         <>
             <h1>Busqueda secuencial</h1>
@@ -61,6 +67,7 @@ export default function Secuencial(props) {
             <ol>
                 {props.claves.map((num, index) => <li key={index}>{num}</li>)}
             </ol>
+            <Toaster />
         </>
     )
 }

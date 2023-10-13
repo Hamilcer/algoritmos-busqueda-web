@@ -1,5 +1,8 @@
 import { useEffect } from 'react';
 import { hashModulo, hashCuadrado, hashTruncamiento, hashPlegamiento, calcularRango } from '../funcionesHash/HashModulo'
+import toast, { Toaster } from 'react-hot-toast';
+
+
 export default function ColisionLineal(props) {
 
     let rango;
@@ -73,6 +76,7 @@ export default function ColisionLineal(props) {
         props.setClaves(actualizado)
         props.setNumInsertadas(props.numInsertadas + 1)
         addOrdenInsercion(clave)
+        notificar(`Clave insertada en la posicion ${index+1}`)
     }
 
     function addOrdenInsercion(clave) {
@@ -120,6 +124,10 @@ export default function ColisionLineal(props) {
         return true;
     }
 
+    function notificar(msg) {
+        toast(msg)
+    }
+
     return (
         <>
             <h1>{modo} - Colision: Cuadratica </h1>
@@ -132,6 +140,7 @@ export default function ColisionLineal(props) {
             <ol>
                 {props.claves.map((num, index) => <li key={index}>{num}</li>)}
             </ol>
+            <Toaster />
         </>
     )
 }

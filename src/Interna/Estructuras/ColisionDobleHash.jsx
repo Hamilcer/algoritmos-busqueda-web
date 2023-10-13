@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 import { hashModulo, hashCuadrado, hashTruncamiento, hashPlegamiento, calcularRango } from '../funcionesHash/HashModulo'
+import toast, { Toaster } from 'react-hot-toast';
+
 
 export default function ColisionDobleHash(props) {
 
@@ -78,9 +80,10 @@ export default function ColisionDobleHash(props) {
         props.setClaves(actualizado)
         props.setNumInsertadas(props.numInsertadas + 1)
         addOrdenInsercion(clave)
+        notificar(`Clave insertada en la posicion ${index + 1}`)
     }
 
-    function addOrdenInsercion(clave){
+    function addOrdenInsercion(clave) {
         const nuevo = props.ordenInsercion
         nuevo.push(parseInt(clave))
         props.setOrdenInsercion(nuevo)
@@ -88,7 +91,7 @@ export default function ColisionDobleHash(props) {
 
     function deleteOrdenInsercion(clave) {
         const nuevo = props.ordenInsercion
-        nuevo.splice(nuevo.indexOf(parseInt(clave)),1)
+        nuevo.splice(nuevo.indexOf(parseInt(clave)), 1)
         props.setOrdenInsercion(nuevo)
     }
 
@@ -125,6 +128,10 @@ export default function ColisionDobleHash(props) {
         return true;
     }
 
+    function notificar(msg) {
+        toast(msg)
+    }
+
     return (
         <>
             <h1>{modo} - Colision: Doble hash</h1>
@@ -137,6 +144,7 @@ export default function ColisionDobleHash(props) {
             <ol>
                 {props.claves.map((num, index) => <li key={index}>{num}</li>)}
             </ol>
+            <Toaster />
         </>
     )
 

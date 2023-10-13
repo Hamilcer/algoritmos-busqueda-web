@@ -1,157 +1,199 @@
-export default function first() {}
-// import { useState } from "react";
-// import ExpansionParcial from "./Estructura/ExpansionParcial";
-// import { crearFilas, crearColumnas } from './functions/funcionesExterna';
-// import { AgGridReact } from 'ag-grid-react'
+import React, {
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+} from 'react';
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-community/styles/ag-grid.css';
+import 'ag-grid-community/styles/ag-theme-alpine.css';
+import Cookies from 'universal-cookie';
+import toast, { Toaster } from 'react-hot-toast';
 
-// import 'ag-grid-community/styles/ag-grid.css'
-// import "ag-grid-community/styles/ag-theme-alpine.css";
+const cookies = new Cookies()
 
-// export default function MenuExterna(props) {
+export default function ExpansionParcial() {
 
-//     //const [filaEstructura, setFilasEstructura] = useState(crearFilas(props.numFilas, props.numColumnas))
-//     //const [columnaEstructura, setColumnaEstructura] = useState(crearColumnas(props.numColumnas))
-//     const [estructura, setEstructura] = useState([crearFilas(props.numFilas, props.numColumnas), crearColumnas(props.numColumnas)])
-//     const [expansiones, setExpansiones] = useState([estructura[1].length])
-//     const [numInsertadas, setNumInsertadas] = useState(0)
-//     const [ordenInsercion, setOrdenInsercion] = useState([])
+    const gridRef = useRef();
+    const data = cookies.get('data')
+
+    const numFilas = data.numFilas
+    let numColumnas = data.numColumnas
+    const rowData = [];
+    const columnDefs = [];
+    const insertadas = []
+    const expasiones = [data.numColumnas]
+
+    const doE = data.doExpansion
+    const doR = data.doReduccion
+
+    useEffect(() => {
+        crearFilas(numFilas, numColumnas)
+        crearColumnas(numColumnas)
+    }, [1])
+
+    function leerClave() {
+        let clave = parseInt(document.getElementById("add").value)
+        if (validarCalve(clave)) {
+            if ((insertadas.length + 1) / (numFilas * columnDefs.length) >= doE) {
+                alert("expansion")
+                expandir()
+            }
+            insertar(clave)
+            insertadas.push(clave)
+            notificar(`Clave insertada en la posicion ${clave % columnDefs.length}`)
+        }
+
+    }
+
+    function eliminarClave() {
+        let clave = parseInt(document.getElementById("add").value)
+        if (!insertadas.includes(clave)) {
+            alert("La clave no está insertada")
+            return;
+        }
+
+        let index = clave % columnDefs.length
+        for (let i = 0; i < rowData.length; i++) {
+            if (rowData[i][index] == clave.toString()) {
+                rowData[i][index] = (i < numFilas) ? '-' : ''
+                insertadas.splice(insertadas.indexOf(clave), 1)
+                break;
+            }
+        }
+
+        if ((insertadas.length) / (columnDefs.length) <= doR && expasiones.length > 1) {
+            alert("Reduccion")
+            reducir()
+        }
+        actualizarCells()
+    }
+
+    function insertar(clave) {
+        let index = clave % columnDefs.length
+        let i = 0;
+        while (true) {
+            if (i < rowData.length && rowData[i][index] == '-') {
+                rowData[i][index] = clave.toString()
+                break;
+            } else if (i >= numFilas && !rowData[i]) {
+                if (!rowData[i]) {
+                    rowData[i] = {}
+                }
+                rowData[i][index] = clave.toString()
+                actualizarColums()
+                break;
+            } else if (i >= numFilas && rowData[i] && !rowData[i][index]) {
+                rowData[i][index] = clave.toString()
+                actualizarColums()
+                break;
+            }
+            i++
+        }
+        actualizarCells()
+    }
+
+    function expandir() {
+        numColumnas = expasiones[expasiones.length - 1] * 2
+
+        expasiones.push(numColumnas)
+        crearFilas(numFilas, numColumnas)
+        crearColumnas(numColumnas)
+        for (let i = 0; i < insertadas.length; i++) {
+            insertar(insertadas[i])
+        }
+        actualizarColums()
+
+    }
+
+    function reducir() {
+        numColumnas = expasiones[expasiones.length - 2]
+        expasiones.pop()
+        crearFilas(numFilas, numColumnas)
+        crearColumnas(numColumnas)
+        for (let i = 0; i < insertadas.length; i++) {
+            insertar(insertadas[i])
+        }
+        actualizarColums()
+    }
+
+    const actualizarCells = useCallback(() => {
+        gridRef.current.api.refreshCells();
+    }, []);
+
+    const actualizarColums = useCallback(() => {
+        gridRef.current.api.setRowData(rowData);
+        gridRef.current.api.setColumnDefs(columnDefs);
+    }, []);
+
+    const actualizarGrid = useCallback(() => {
+        gridRef.current.api.refreshCells();
+        gridRef.current.api.setRowData(rowData);
+        gridRef.current.api.setColumnDefs(columnDefs);
+    }, []);
+
+    function crearFilas(filas, columnas) {
+        for (let i = 0; i < filas; i++) {
+            rowData[i] = {}
+            for (let j = 0; j < columnas; j++) {
+                rowData[i][j] = '-'
+            }
+        }
+        let actualRows = rowData.length
+        for (let j = numFilas; j < actualRows; j++) {
+            rowData.pop()
+        }
+
+    }
+
+    function crearColumnas(columnas) {
+        for (let i = 0; i < columnas; i++) {
+            columnDefs[i] = { "field": i.toString() };
+        }
+        let sobrante = columnDefs.length
+        for (let j = columnas; j < sobrante; j++) {
+            columnDefs.pop()
+        }
+    }
+
+    function validarCalve(clave) {
+        if (clave < 0 || !clave) {
+            alert("Introduzca un numero positivo")
+            return false
+        }
+        if (insertadas.indexOf(clave) != -1) {
+            alert("Clave ya insertada")
+            return false
+        }
+        return true
+    }
+
+    function notificar(msg) {
+        toast(msg)
+    }
+
+    return (
+        <>
+            <h1>Expansión Total</h1>
+            <input type="number" id='add' />
+            <div style={{ marginBottom: '5px', minHeight: '30px' }}>
+                <button onClick={leerClave}>Insertar</button>
+                <button onClick={eliminarClave}>Eliminar</button>
+            </div>
+            <div style={{ height: 500 }} className="ag-theme-alpine-dark">
+                <AgGridReact
+
+                    ref={gridRef}
+
+                    rowData={rowData}
+                    columnDefs={columnDefs}
+                    rowSelection={'single'}
+                    animateRows={true}
+                />
+            </div>
+            <Toaster />
+        </>
+    );
+};
 
 
-
-//     let estructuraExpansion;
-
-//     if (props.tipoExpansion == 1) {
-//         //estructuraExpansion
-//     } else if (props.tipoExpansion == 2) {
-//         estructuraExpansion = <ExpansionParcial
-//             //filasE={filaEstructura}
-//             //columnasE={columnaEstructura}
-//             es={estructura}
-//             expansiones={expansiones}
-//             numInsertadas={numInsertadas}
-//             ordenInsercion={ordenInsercion}
-//             doExpansion={props.doExpansion}
-//             doReduccion={props.doReduccion}
-//             //setFilasEstructura={setFilasEstructura}
-//             //setColumnaEstructura={setColumnaEstructura}
-//             setEstructura={setEstructura}
-//             setExpansiones={setExpansiones}
-//             setNumInsertadas={setNumInsertadas}
-//             setOrdenInsercion={setOrdenInsercion}
-//         />
-//     }
-
-
-//     function print() {
-//         console.log(estructura)
-//         console.log(ordenInsercion)
-//         console.log("numInsertadas: " +numInsertadas)
-//         console.log("doExpansion: "+props.doExpansion)
-//         //console.log(filaEstructura)
-//     }
-
-
-//     return (
-//         <div className="externa">
-//             {estructuraExpansion}
-//             <br />
-//             <button onClick={print}>
-//                 Clg
-//             </button>
-//         </div>
-//     )
-// }
-//////////////////////////////////
-
-// import { AgGridReact } from 'ag-grid-react'
-
-// import '../../css/styleExterna.css'
-// import 'ag-grid-community/styles/ag-grid.css'
-// import "ag-grid-community/styles/ag-theme-alpine.css";
-// import { crearColumnas, crearFilas } from '../functions/funcionesExterna';
-// import { useCallback, useEffect, useState } from 'react';
-
-
-// export default function ExpansionParcial(props) {
-
-//     const [row, setRow] = useState(props.es[0])
-//     function comprobarDoE() {
-//         let clave = parseInt(document.getElementById('add').value)
-//         if ((props.numInsertadas + 1) / (props.es[1].length * props.es[0].length) >= props.doExpansion) {
-//             expandir()
-//             alert("Expansion")
-//         }
-//         insertar(clave)
-//     }
-
-
-//     function insertar(clave) {
-//         let index = clave % props.es[1].length
-//         let nuevo = props.es
-//         for (let i = 0; i < nuevo[0].length; i++) {
-
-//             if (nuevo[0][i][index] == "-") {
-//                 nuevo[0][i][index] = clave
-//                 break;
-//             }
-//         }
-//         const update = nuevo;
-//         props.setEstructura(update)
-//         console.log(props.es)
-//         props.setNumInsertadas(props.numInsertadas + 1)
-//         addOrdenInsercion(clave)
-
-//     }
-
-//     function addOrdenInsercion(clave) {
-//         const nuevo = props.ordenInsercion
-//         nuevo.push(parseInt(clave))
-//         props.setOrdenInsercion(nuevo)
-//     }
-
-//     function expandir() {
-//         let newNumColumn;
-//         if (props.expansiones.length <= 1) {
-//             newNumColumn = newNumColumn + parseInt(newNumColumn / 2)
-//         } else {
-//             newNumColumn = props.expansiones[props.expansiones - 2] * 2
-//         }
-
-//         const newEstructura = [crearFilas(props.es[0].length, props.es[1].length), crearColumnas(newNumColumn)]
-//         props.setEstructura(newEstructura)
-
-//         for (let i = 0; i < props.ordenInsercion.length; i++) {
-//             insertar(props.ordenInsercion[i])
-//         }
-//     }
-
-//     useEffect(() => {
-//         setRow(row)
-//     }, row)
-//     function prueba() {
-//         console.log("sefgerg!!!!!!!")
-//         let value = parseInt(document.getElementById("add").value)
-//         let aux = row
-//         aux[0][0] = value
-//         const update = aux
-//         setRow(update)
-//         //window.location.reload()
-//     }
-//     return (
-//         <>
-//             <h1>Parciales</h1>
-//             <div id="myGrid" className='ag-theme-alpine-dark' >
-//                 <AgGridReact
-//                     rowData={row}
-//                     columnDefs={props.es[1]}
-//                 />
-//             </div>
-
-//             <input type="number" id='add' />
-//             <button onClick={prueba}>Agregar</button>
-//             <br />
-//             <input type="number" id='delete' />
-//             <button>Eliminar</button>
-//         </>
-//     )
-// }

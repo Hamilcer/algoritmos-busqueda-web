@@ -1,5 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect} from 'react';
 import { hashModulo, hashCuadrado, hashTruncamiento, hashPlegamiento, calcularRango } from '../funcionesHash/HashModulo'
+import toast, { Toaster } from 'react-hot-toast';
+
 
 export default function ColisionListaEnlazada(props) {
 
@@ -55,6 +57,7 @@ export default function ColisionListaEnlazada(props) {
         for (let i = 0; i < props.numClaves; i++) {
             if (nuevo[index][i] == undefined) {
                 nuevo[index][i] = parseInt(clave)
+                notificar(`Clave insertada en la posicion ${index+1}`)
                 break;
             }
         }
@@ -114,9 +117,15 @@ export default function ColisionListaEnlazada(props) {
         return true;
     }
 
+    function notificar(msg){
+            toast(msg)
+    }
+
     return (
         <>
             <h1>{modo} - Colision: Listas enlazadas</h1>
+            <h4>Rango: {rango}</h4>
+            
             <div>
                 <h3>Clave:</h3>
                 <input type="number" name="" id="inputClave" /> <br />
@@ -124,8 +133,9 @@ export default function ColisionListaEnlazada(props) {
                 <button onClick={eliminarClave}>Eliminar</button>
             </div>
             <ol>
-                {props.claves.map((num, index) => <li key={index}>{num}</li>)}
+                {props.claves.map((num, index) => <li key={index}>{"" + num}</li>)}
             </ol>
+            <Toaster />
         </>
     )
 

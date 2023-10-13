@@ -8,15 +8,9 @@ import { AgGridReact } from 'ag-grid-react';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
 import Cookies from 'universal-cookie';
+import toast, { Toaster } from 'react-hot-toast';
 
-const cookies = new Cookies();
-
-const columnData2 = [
-    { field: "make" },
-    { field: "model" },
-    { field: "price" },
-    { field: "nueva" }
-];
+const cookies = new Cookies()
 
 export default function ExpansionParcial() {
 
@@ -40,12 +34,16 @@ export default function ExpansionParcial() {
 
     function leerClave() {
         let clave = parseInt(document.getElementById("add").value)
-        if ((insertadas.length + 1) / (numFilas * columnDefs.length) >= doE) {
-            alert("expansion")
-            expandir()
+        if (validarCalve(clave)) {
+            if ((insertadas.length + 1) / (numFilas * columnDefs.length) >= doE) {
+                alert("expansion")
+                expandir()
+            }
+            insertar(clave)
+            insertadas.push(clave)
+            notificar(`Clave insertada en la posicion ${clave % columnDefs.length}`)
         }
-        insertar(clave)
-        insertadas.push(clave)
+
     }
 
     function eliminarClave() {
@@ -124,21 +122,15 @@ export default function ExpansionParcial() {
 
     const actualizarCells = useCallback(() => {
         gridRef.current.api.refreshCells();
-        //gridRef.current.api.redrawRows();
-        //gridRef.current.api.setRowData(rowData);
-        //gridRef.current.api.setColumnDefs(columnDefs);
     }, []);
 
     const actualizarColums = useCallback(() => {
-        //gridRef.current.api.refreshCells();
-        //gridRef.current.api.redrawRows();
         gridRef.current.api.setRowData(rowData);
         gridRef.current.api.setColumnDefs(columnDefs);
     }, []);
 
     const actualizarGrid = useCallback(() => {
         gridRef.current.api.refreshCells();
-        //gridRef.current.api.redrawRows();
         gridRef.current.api.setRowData(rowData);
         gridRef.current.api.setColumnDefs(columnDefs);
     }, []);
@@ -167,15 +159,25 @@ export default function ExpansionParcial() {
         }
     }
 
+    function validarCalve(clave) {
+        if(clave < 0 || !clave){
+            alert("Introduzca un numero positivo")
+            return false
+        }
+        if(insertadas.indexOf(clave)!=-1){
+            alert("Clave ya insertada")
+            return false
+        }
+        return true
+    }
 
-    const onColumnData = useCallback(() => {
-        //setColumnDefs(columnData2);
-    }, []);
-
+    function notificar(msg) {
+        toast(msg)
+    }
 
     return (
         <>
-            <h1>Parcial</h1>
+            <h1>Expansión Parcial</h1>
             <input type="number" id='add' />
             <div style={{ marginBottom: '5px', minHeight: '30px' }}>
                 <button onClick={leerClave}>Insertar</button>
@@ -190,11 +192,9 @@ export default function ExpansionParcial() {
                     columnDefs={columnDefs}
                     rowSelection={'single'}
                     animateRows={true}
-
-                //onGridReady={actualizarGrid}
-
                 />
             </div>
+            <Toaster />
         </>
     );
 };
