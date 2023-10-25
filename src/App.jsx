@@ -25,6 +25,9 @@ function App() {
       <Link to={"/externa"}>
         <button>Externa</button>
       </Link>
+      <Link to={"/indices"}>
+        <button>Indices</button>
+      </Link>
     </>
   )
 }

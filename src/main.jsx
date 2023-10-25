@@ -6,6 +6,7 @@ import { RouterProvider, createHashRouter } from 'react-router-dom'
 import Interna from './Interna/Interna.jsx'
 import Externa from './Externa/Externa.jsx'
 import MenuExterna from './Externa/Estructura/ExpansionTotal.jsx'
+import EstructuraIndices from './Indices/EstructuraIndices.jsx';
 
 const router = createHashRouter([
   {
@@ -23,6 +24,10 @@ const router = createHashRouter([
   {
     path: "/estructura-externa",
     element: <MenuExterna />,
+  },
+  {
+    path:"/indices",
+    element: <EstructuraIndices/>
   }
   ])
 

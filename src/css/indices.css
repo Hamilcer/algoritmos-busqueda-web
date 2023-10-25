@@ -1,0 +1,17 @@
+.bloque {
+    color: red;
+    border: 1px solid red;
+}
+
+.reg {
+    color: aqua;
+    border: 1px solid white;
+    height: 30px;
+    width: 100px;
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    justify-content: space-around;
+}
