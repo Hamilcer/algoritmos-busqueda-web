@@ -86,7 +86,8 @@ export function calcularRango(cantidadClaves) {
                 numero = cantidadClaves;
                 break;
         }*/
-  return numero;
+  // return numero;
+  return cantidadClaves;
 }
 
 function esPrimo(n) {

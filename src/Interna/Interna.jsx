@@ -14,7 +14,7 @@ export default function Interna() {
 
     if (!contenido) {
         contenido = <form onSubmit={formSubmit}>
-            <h4>Selecciona un tipo de busqueda: </h4>
+            <h4>Selecciona un tipo de insercion: </h4>
             <label> <input type="radio" value={1} checked={tipoBusqueda == 1} onChange={cambioBusqueda} /> Secuencial </label> <br />
             <label> <input type="radio" value={2} checked={tipoBusqueda == 2} onChange={cambioBusqueda} /> Binaria </label> <br />
             <label> <input type="radio" value={3} checked={tipoBusqueda == 3} onChange={cambioBusqueda} /> Hash modulo </label> <br />
@@ -32,7 +32,7 @@ export default function Interna() {
             <h4>Ingresa el número de claves a insertar mayor o igual a 10 (debe ser potencia de 10): </h4>
             <input type="number" onChange={cambioNumClaves} /> <br />
 
-            <h4>Ingresa el número de cifras que va a tener cada clave: </h4>
+            <h4>Ingresa el número de digitos que va a tener cada clave: </h4>
             <input type="number" onChange={cambioNumCifras} /> <br />
 
             <button className="btn btn-default" type="submit"> Aceptar </button>

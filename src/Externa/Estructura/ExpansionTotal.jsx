@@ -35,7 +35,7 @@ export default function ExpansionParcial() {
     function leerClave() {
         let clave = parseInt(document.getElementById("add").value)
         if (validarCalve(clave)) {
-            if ((insertadas.length + 1) / (numFilas * columnDefs.length) >= doE) {
+            if ((insertadas.length) / (numFilas * columnDefs.length) >= doE) {
                 alert("expansion")
                 expandir()
             }
@@ -148,7 +148,7 @@ export default function ExpansionParcial() {
 
     function crearColumnas(columnas) {
         for (let i = 0; i < columnas; i++) {
-            columnDefs[i] = { "field": i.toString() };
+            columnDefs[i] = { "field": "Cubeta: " + i.toString() };
         }
         let sobrante = columnDefs.length
         for (let j = columnas; j < sobrante; j++) {

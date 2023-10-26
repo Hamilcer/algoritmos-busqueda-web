@@ -52,8 +52,8 @@ export default function ColisionDobleHash(props) {
                 let libre = true;
 
                 while (props.claves[index] != "") {
-                    index = (index + intento) % rango
-                    index = (index >= props.numClaves) ? (index - (props.numClaves - 1)) : index;
+                    index = ((index + 1) % rango)+1
+                    index = (index >= props.numClaves) ? index%props.numClaves : index;
 
                     if (maxIteration >= props.numClaves) {
                         libre = false;

@@ -50,8 +50,9 @@ export default function ColisionLineal(props) {
                 let i = 1;
                 let maxIteration = 0;
                 let libre = true;
+                let posOriginal = index;
                 while (props.claves[index] != "") {
-                    index = (index + i * i >= props.claves.length) ? 0 : index + i * i;
+                    index = (posOriginal + i * i >= props.claves.length) ? (posOriginal + i * i)%props.claves.length : posOriginal + i * i;
                     console.log("Nueva posicion: " + (index + 1));
                     i++;
                     maxIteration++;

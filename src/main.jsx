@@ -7,6 +7,7 @@ import Interna from './Interna/Interna.jsx'
 import Externa from './Externa/Externa.jsx'
 import MenuExterna from './Externa/Estructura/ExpansionTotal.jsx'
 import EstructuraIndices from './Indices/EstructuraIndices.jsx';
+import IndicesDos from './Indices/indicesDos.jsx'
 
 const router = createHashRouter([
   {
@@ -28,6 +29,10 @@ const router = createHashRouter([
   {
     path:"/indices",
     element: <EstructuraIndices/>
+  },
+  {
+    path:"/indices2",
+    element: <IndicesDos/>
   }
   ])
 
