@@ -18,8 +18,8 @@ export default function Externa() {
     const [numCifras, setNumCifras] = useState(4)
     const [numFilas, setNumFilas] = useState(2)
     const [numColumnas, setNumColumnas] = useState(2)
-    const [doExpansion, setDoExpansion] = useState(0.5)
-    const [doReduccion, setDoReduccion] = useState(1.5)
+    const [doExpansion, setDoExpansion] = useState(3)
+    const [doReduccion, setDoReduccion] = useState(1.99)
     const [parametrosValidos, setParametrosValidos] = useState(false)
 
     let contenido;
@@ -98,10 +98,11 @@ export default function Externa() {
         //     alert("Ingerse un numero de cifras válido")
         //     return;
         // }
-        else if (doExpansion >= 1 || doExpansion <= .49) {
-            alert("Ingrese un porcentaje de expansion valido")
-            return;
-        } else if (doReduccion <= 1 || doReduccion >= 2) {
+        // else if (doExpansion >= 1 || doExpansion <= .49) {
+        //     alert("Ingrese un porcentaje de expansion valido")
+        //     return;
+        // }
+         else if (doReduccion <= 1 || doReduccion >= 2) {
             alert("Ingrese un porcentaje de reduccion valido")
             return;
         }

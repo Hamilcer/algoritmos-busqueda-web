@@ -62,16 +62,33 @@ export default function ExpansionParcial() {
         for (let i = 0; i < rowData.length; i++) {
             if (rowData[i][nameColumn + index.toString()] == clave.toString()) {
                 rowData[i][nameColumn + index.toString()] = (i < numFilas) ? '-' : ''
+                moverClaves(nameColumn, index, i)
                 insertadas.splice(insertadas.indexOf(clave), 1)
                 break;
             }
         }
+
+        
 
         if ((insertadas.length) / (columnDefs.length) <= doR && expasiones.length > 1) {
             alert("Reduccion")
             reducir()
         }
         actualizarCells()
+    }
+
+    function moverClaves(nameColumn, index, i) {
+        let j = i
+        while (j+1 < rowData.length) {
+            if(rowData[j+1][nameColumn + index.toString()] != '' && rowData[j+1][nameColumn + index.toString()] != '-'){ 
+                rowData[j][nameColumn + index.toString()] = rowData[j+1][nameColumn + index.toString()]
+            } else {
+                break;
+            }
+            j++
+        }
+        rowData[j][nameColumn + index.toString()] = (j>=numFilas)?'':'-'
+        
     }
 
     function insertar(clave) {
