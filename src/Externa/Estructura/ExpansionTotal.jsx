@@ -23,6 +23,7 @@ export default function ExpansionParcial() {
     const columnDefs = [];
     const insertadas = []
     const expasiones = [data.numColumnas]
+    const nameColumn = "Cubeta: "
 
     const doE = data.doExpansion
     const doR = data.doReduccion
@@ -30,18 +31,22 @@ export default function ExpansionParcial() {
     useEffect(() => {
         crearFilas(numFilas, numColumnas)
         crearColumnas(numColumnas)
-    }, [1])
+    }, [])
+
+    // useEffect(()=>{
+    //     // gridRef.current.api.refreshCells();
+    // }, [rowData, columnDefs])
 
     function leerClave() {
         let clave = parseInt(document.getElementById("add").value)
         if (validarCalve(clave)) {
-            if ((insertadas.length) / (numFilas * columnDefs.length) >= doE) {
+            if ((insertadas.length) / (numFilas * numColumnas) >= doE) {
                 alert("expansion")
                 expandir()
             }
             insertar(clave)
             insertadas.push(clave)
-            notificar(`Clave insertada en la posicion ${clave % columnDefs.length}`)
+            notificar(`Clave insertada en la posicion ${clave % numColumnas}`)
         }
 
     }
@@ -53,10 +58,10 @@ export default function ExpansionParcial() {
             return;
         }
 
-        let index = clave % columnDefs.length
+        let index = clave % numColumnas
         for (let i = 0; i < rowData.length; i++) {
-            if (rowData[i][index] == clave.toString()) {
-                rowData[i][index] = (i < numFilas) ? '-' : ''
+            if (rowData[i][nameColumn + index.toString()] == clave.toString()) {
+                rowData[i][nameColumn + index.toString()] = (i < numFilas) ? '-' : ''
                 insertadas.splice(insertadas.indexOf(clave), 1)
                 break;
             }
@@ -70,21 +75,21 @@ export default function ExpansionParcial() {
     }
 
     function insertar(clave) {
-        let index = clave % columnDefs.length
+        let index = clave % numColumnas
         let i = 0;
         while (true) {
-            if (i < rowData.length && rowData[i][index] == '-') {
-                rowData[i][index] = clave.toString()
+            if (i < rowData.length && rowData[i][nameColumn + index.toString()] == '-') { //inserta a la primera
+                rowData[i][nameColumn + index.toString()] = clave.toString()
                 break;
-            } else if (i >= numFilas && !rowData[i]) {
+            } else if (i >= numFilas && !rowData[i]) {  //area colision
                 if (!rowData[i]) {
                     rowData[i] = {}
                 }
-                rowData[i][index] = clave.toString()
+                rowData[i][nameColumn + index.toString()] = clave.toString()
                 actualizarColums()
                 break;
-            } else if (i >= numFilas && rowData[i] && !rowData[i][index]) {
-                rowData[i][index] = clave.toString()
+            } else if (i >= numFilas && rowData[i] && !rowData[i][nameColumn + index.toString()]) { //
+                rowData[i][nameColumn + index.toString()] = clave.toString()
                 actualizarColums()
                 break;
             }
@@ -130,13 +135,17 @@ export default function ExpansionParcial() {
         gridRef.current.api.refreshCells();
         gridRef.current.api.setRowData(rowData);
         gridRef.current.api.setColumnDefs(columnDefs);
+        console.log(rowData)
+        console.log(columnDefs)
     }, []);
 
     function crearFilas(filas, columnas) {
+        
         for (let i = 0; i < filas; i++) {
             rowData[i] = {}
-            for (let j = 0; j < columnas; j++) {
-                rowData[i][j] = '-'
+            rowData[i][' '] = "Registro: " + i
+            for (let j = 1; j < columnas+1; j++) {
+                rowData[i][nameColumn + (j-1).toString()] = '-'
             }
         }
         let actualRows = rowData.length
@@ -147,11 +156,12 @@ export default function ExpansionParcial() {
     }
 
     function crearColumnas(columnas) {
-        for (let i = 0; i < columnas; i++) {
-            columnDefs[i] = { "field": "Cubeta: " + i.toString() };
+        columnDefs[0] = { "field": " ", "lockPosition": 'left'};
+        for (let i = 1; i < columnas+1; i++) {
+            columnDefs[i] = { "field": nameColumn + (i-1).toString(), "lockPosition": 'left'};
         }
         let sobrante = columnDefs.length
-        for (let j = columnas; j < sobrante; j++) {
+        for (let j = columnas+1; j < sobrante; j++) {
             columnDefs.pop()
         }
     }
@@ -188,9 +198,11 @@ export default function ExpansionParcial() {
                     rowData={rowData}
                     columnDefs={columnDefs}
                     rowSelection={'single'}
-                    animateRows={true}
+                    lockPosition ={true}
+                    // animateRows={true}
                 />
             </div>
+            <button onClick={actualizarGrid}>Actualizar</button>
             <Toaster />
         </>
     );

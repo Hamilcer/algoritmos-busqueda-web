@@ -7,12 +7,19 @@ export default function Externa() {
     const cookies = new Cookies();
 
     //const [tipoBusqueda, setTipoBusqueda] = useState(1)
+    // const [tipoExpansion, setTipoExpansion] = useState(0)
+    // const [numCifras, setNumCifras] = useState(0)
+    // const [numFilas, setNumFilas] = useState(0)
+    // const [numColumnas, setNumColumnas] = useState(0)
+    // const [doExpansion, setDoExpansion] = useState(0)
+    // const [doReduccion, setDoReduccion] = useState(0)
+    // const [parametrosValidos, setParametrosValidos] = useState(false)
     const [tipoExpansion, setTipoExpansion] = useState(0)
-    const [numCifras, setNumCifras] = useState(0)
-    const [numFilas, setNumFilas] = useState(0)
-    const [numColumnas, setNumColumnas] = useState(0)
-    const [doExpansion, setDoExpansion] = useState(0)
-    const [doReduccion, setDoReduccion] = useState(0)
+    const [numCifras, setNumCifras] = useState(4)
+    const [numFilas, setNumFilas] = useState(2)
+    const [numColumnas, setNumColumnas] = useState(2)
+    const [doExpansion, setDoExpansion] = useState(0.5)
+    const [doReduccion, setDoReduccion] = useState(1.5)
     const [parametrosValidos, setParametrosValidos] = useState(false)
 
     let contenido;
