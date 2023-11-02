@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import MenuInterna from './MenuInterna'
 import { Link } from 'react-router-dom'
+import '../css/internas.css';
 
 export default function Interna() {
 
@@ -90,7 +91,7 @@ export default function Interna() {
                 tipoBusqueda={tipoBusqueda}
                 colision={colision}
                 numClaves={numClaves}
-                numCifras={numCifras}
+                numCifras={parseInt(numCifras)}
             /> : contenido}
         </>
     )

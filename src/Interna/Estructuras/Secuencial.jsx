@@ -2,6 +2,7 @@ import toast, { Toaster } from 'react-hot-toast';
 
 export default function Secuencial(props) {
 
+    console.log(props);
     function agregarClave() {
         let clave = document.getElementById("inputClave").value
         if (validarClave(clave)) {
@@ -34,9 +35,23 @@ export default function Secuencial(props) {
         }
     }
 
+    function buscarClave() {
+        let clave = parseInt(document.getElementById("inputClave").value)
+        let index = props.claves.indexOf(clave)
+        if (index != -1) {
+            for (let i = 0; i < props.claves.length; i++) {
+                if (props.claves[i] == clave) {
+                    notificar("Clave encontrada en la posicion " + (i + 1))
+                }
+
+            }
+        } else {
+            alert("Clave no encontrada!!")
+        }
+    }
     function validarClave(clave) {
         if (clave.length > props.numCifras) {
-            alert("Introduzca una clave con " + numCifras + "cifras")
+            alert("Introduzca una clave con " + props.numCifras + " cifras")
             return false;
         } else if (+clave < 1) {
             alert("Ingrese un numero entero positivo")
@@ -63,6 +78,7 @@ export default function Secuencial(props) {
                 <input type="number" name="" id="inputClave" /> <br />
                 <button onClick={agregarClave}>Insertar</button>
                 <button onClick={eliminarClave}>Eliminar</button>
+                <button onClick={buscarClave}>Buscar</button>
             </div>
             <ol>
                 {props.claves.map((num, index) => <li key={index}>{num}</li>)}

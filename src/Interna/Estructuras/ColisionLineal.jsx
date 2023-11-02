@@ -59,7 +59,7 @@ export default function ColisionLineal(props) {
         const actualizado = nuevo
         props.setClaves(actualizado)
         props.setNumInsertadas(props.numInsertadas + 1)
-        notificar(`Clave insertada en la posicion ${index+1}`)
+        notificar(`Clave insertada en la posicion ${index + 1}`)
         addOrdenInsercion(clave)
     }
 
@@ -88,6 +88,16 @@ export default function ColisionLineal(props) {
             deleteOrdenInsercion(clave)
         } else {
             alert("Clave no insertada")
+        }
+    }
+
+    function buscarClave() {
+        let clave = parseInt(document.getElementById("inputClave").value)
+        let index = props.claves.indexOf(clave)
+        if (index != -1) {
+            notificar(`Clave encontrada en la posicion ${index + 1}`)
+        } else {
+            notificar("Clave no encontrada")
         }
     }
 
@@ -120,6 +130,7 @@ export default function ColisionLineal(props) {
                 <input type="number" name="" id="inputClave" /> <br />
                 <button onClick={agregarClave}>Insertar</button>
                 <button onClick={eliminarClave}>Eliminar</button>
+                <button onClick={buscarClave}>Buscar</button>
             </div>
             <ol>
                 {props.claves.map((num, index) => <li key={index}>{num}</li>)}

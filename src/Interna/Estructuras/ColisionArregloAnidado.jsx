@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 import { hashModulo, hashCuadrado, hashTruncamiento, hashPlegamiento, calcularRango } from '../funcionesHash/HashModulo'
+import toast, { Toaster } from 'react-hot-toast';
+
 
 export default function ColisionArregloAnidado(props) {
 
@@ -103,6 +105,21 @@ export default function ColisionArregloAnidado(props) {
         alert("Clave no insertada")
     }
 
+    function buscarClave() {
+        let clave = parseInt(document.getElementById("inputClave").value)
+        let nuevo = props.claves
+
+        for (let i = 0; i < props.numClaves; i++) {
+            for (let j = 0; j < props.numClaves; j++) {
+                if (nuevo[i][j] == clave) {
+                    notificar(`Clave en la posición: ${i + 1} ${(j > 0) ? ' en area de colisón' : ''}`)
+                    return;
+                }
+            }
+        }
+        notificar("Clave no encontrada")
+    }
+
     function validarClave(clave) {
         if (clave.length > props.numCifras) {
             alert("Introduzca una clave con " + props.numCifras + " cifras")
@@ -120,6 +137,10 @@ export default function ColisionArregloAnidado(props) {
         return true;
     }
 
+    function notificar(msg) {
+        toast(msg)
+    }
+
     return (
         <>
             <h1>{modo} - Colision: Arreglos anidados</h1>
@@ -128,10 +149,18 @@ export default function ColisionArregloAnidado(props) {
                 <input type="number" name="" id="inputClave" /> <br />
                 <button onClick={agregarClave}>Insertar</button>
                 <button onClick={eliminarClave}>Eliminar</button>
+                <button onClick={buscarClave}>Buscar</button>
             </div>
             <ol>
-                {props.claves.map((num, index) => <li key={index}>{"" + num}</li>)}
+                {props.claves.map((element, index) =>
+                    <li key={index}>
+                        {element.map((num, index) =>
+                            <b className='cuadro-arreglo-anidado' key={index} > {num} </b>
+                        )}
+                    </li>
+                )}
             </ol>
+            <Toaster />
         </>
     )
 

@@ -1,4 +1,4 @@
-import { useEffect} from 'react';
+import { useEffect } from 'react';
 import { hashModulo, hashCuadrado, hashTruncamiento, hashPlegamiento, calcularRango } from '../funcionesHash/HashModulo'
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -57,7 +57,7 @@ export default function ColisionListaEnlazada(props) {
         for (let i = 0; i < props.numClaves; i++) {
             if (nuevo[index][i] == undefined) {
                 nuevo[index][i] = parseInt(clave)
-                notificar(`Clave insertada en la posicion ${index+1}`)
+                notificar(`Clave insertada en la posicion ${index + 1}`)
                 break;
             }
         }
@@ -75,7 +75,7 @@ export default function ColisionListaEnlazada(props) {
 
     function deleteOrdenInsercion(clave) {
         const nuevo = props.ordenInsercion
-        nuevo.splice(nuevo.indexOf(parseInt(clave)),1)
+        nuevo.splice(nuevo.indexOf(parseInt(clave)), 1)
         props.setOrdenInsercion(nuevo)
     }
 
@@ -86,7 +86,7 @@ export default function ColisionListaEnlazada(props) {
         for (let i = 0; i < props.numClaves; i++) {
             for (let j = 0; j < props.numClaves; j++) {
                 if (nuevo[i][j] == clave) {
-                    nuevo[i].splice(j,1)
+                    nuevo[i].splice(j, 1)
                     const actualizado = nuevo
                     props.setClaves(actualizado)
                     props.setNumInsertadas(props.numInsertadas - 1)
@@ -98,6 +98,21 @@ export default function ColisionListaEnlazada(props) {
 
         alert("Clave no insertada")
 
+    }
+
+    function buscarClave() {
+        let clave = parseInt(document.getElementById("inputClave").value)
+        let nuevo = props.claves
+
+        for (let i = 0; i < props.numClaves; i++) {
+            for (let j = 0; j < props.numClaves; j++) {
+                if (nuevo[i][j] == clave) {
+                    notificar(`Clave en la posición: ${i + 1} ${(j > 0) ? ' en area de colisón' : ''}`)
+                    return;
+                }
+            }
+        }
+        notificar("Clave no encontrada")
     }
 
     function validarClave(clave) {
@@ -117,23 +132,30 @@ export default function ColisionListaEnlazada(props) {
         return true;
     }
 
-    function notificar(msg){
-            toast(msg)
+    function notificar(msg) {
+        toast(msg)
     }
 
     return (
         <>
             <h1>{modo} - Colision: Listas enlazadas</h1>
             <h4>Rango: {rango}</h4>
-            
+
             <div>
                 <h3>Clave:</h3>
                 <input type="number" name="" id="inputClave" /> <br />
                 <button onClick={agregarClave}>Insertar</button>
                 <button onClick={eliminarClave}>Eliminar</button>
+                <button onClick={buscarClave}>Buscar</button>
             </div>
             <ol>
-                {props.claves.map((num, index) => <li key={index}>{"" + num}</li>)}
+                {props.claves.map((element, index) =>
+                    <li key={index}>
+                        {element.map((num, index) =>
+                            <b key={index} > {(index > 0) ? '->' + num : num} </b>
+                        )}
+                    </li>
+                )}
             </ol>
             <Toaster />
         </>

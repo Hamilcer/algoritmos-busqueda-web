@@ -111,6 +111,16 @@ export default function ColisionDobleHash(props) {
         }
     }
 
+    function buscarClave() {
+        let clave = parseInt(document.getElementById("inputClave").value)
+        let index = props.claves.indexOf(clave)
+        if (index != -1) {
+            notificar(`Clave encontrada en la posicion ${index + 1}`)
+        } else {
+            notificar("Clave no encontrada")
+        }
+    }
+
     function validarClave(clave) {
         if (clave.length > props.numCifras) {
             alert("Introduzca una clave con " + props.numCifras + " cifras")
@@ -140,6 +150,7 @@ export default function ColisionDobleHash(props) {
                 <input type="number" name="" id="inputClave" /> <br />
                 <button onClick={agregarClave}>Insertar</button>
                 <button onClick={eliminarClave}>Eliminar</button>
+                <button onClick={buscarClave}>Buscar</button>
             </div>
             <ol>
                 {props.claves.map((num, index) => <li key={index}>{num}</li>)}

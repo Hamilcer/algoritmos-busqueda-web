@@ -5,7 +5,7 @@ import { RouterProvider, createHashRouter } from 'react-router-dom'
 
 import Interna from './Interna/Interna.jsx'
 import Externa from './Externa/Externa.jsx'
-import MenuExterna from './Externa/Estructura/ExpansionTotal.jsx'
+// import MenuExterna from './Externa/Estructura/ExpansionTotal.jsx'
 import EstructuraIndices from './Indices/EstructuraIndices.jsx';
 import IndicesDos from './Indices/indicesDos.jsx'
 
@@ -22,10 +22,10 @@ const router = createHashRouter([
     path: "/externa",
     element: <Externa />,
   },
-  {
-    path: "/estructura-externa",
-    element: <MenuExterna />,
-  },
+  // {
+  //   path: "/estructura-externa",
+  //   element: <MenuExterna />,
+  // },
   {
     path:"/indices",
     element: <EstructuraIndices/>
